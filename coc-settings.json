@@ -1,16 +1,19 @@
 {
-    "languageserver": {
-        "bash": {
-            "command": "bash-language-server",
-            "args": ["start"],
-            "filetypes": ["sh"]
-        }
-    },
+  "languageserver": {
+    "bash": {
+      "command": "bash-language-server",
+      "args": ["start"],
+      "filetypes": ["sh"],
+      "ignoredRootPaths": ["~"]
+    }
+  },
 
-    "clangd.path": "~/.config/coc/extensions/coc-clangd-data/install/16.0.2/clangd_16.0.2/bin/clangd",
-    "suggest.noselect": true,
-    "clangd.fallbackFlags": [
-        "-I/home/usrname/vcpkg/installed/x64-linux/include",
-        "-L/home/usrname/vcpkg/installed/x64-linux/lib"
-    ]
+  "clangd.path": "~/.config/coc/extensions/coc-clangd-data/install/16.0.2/clangd_16.0.2/bin/clangd",
+  "suggest.noselect": true,
+  "clangd.fallbackFlags": [
+    "-I/home/usrname/vcpkg/installed/x64-linux/include",
+    "-L/home/usrname/vcpkg/installed/x64-linux/lib"
+  ],
+  "coc.preferences.formatOnSave": true,
+  "colors.enable": true
 }

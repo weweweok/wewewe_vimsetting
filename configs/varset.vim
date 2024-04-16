@@ -21,12 +21,12 @@ set clipboard+=unnamed,unnamedplus
 "eコマンド等でTabキーを押すとパスを保管する(文字列のリスト) : この場合まず最長一致文字列まで補完し、2回目以降は一つづつ試す
 set wildmode=longest,full
 
-
 "インデントに関して
-:set autoindent
-:set smartindent
-:set cindent
+set autoindent
+set smartindent
+set cindent 
 
+"{ + Enterで括弧を補完して改行する
 inoremap { {}<LEFT>
 inoremap [ []<LEFT>
 inoremap ( ()<LEFT>
@@ -43,37 +43,29 @@ inoremap <silent> <Esc> <Esc>:call system('fcitx-remote -c')<CR>
 
 "jキーを二度押しでESCキー
 inoremap <silent> jj <Esc>
-inoremap <silent> っj <ESC>
 
-"下部分にターミナルウィンドウを作る
-function! Myterm()
-    split
-    wincmd j
-    resize 10
-    terminal
-    wincmd k
-endfunction
-command! Myterm call Myterm()
-
-"起動時にターミナルウィンドウを設置
-if has('vim_starting')
-    Myterm
-endif
-
-"上のエディタウィンドウと下のターミナルウィンドウ(ターミナル挿入モード)を行き来
-tnoremap <C-t> <C-\><C-n><C-w>k
-nnoremap <C-t> <C-w>ji
 "ターミナル挿入モードからターミナルモードへ以降
 tnoremap <Esc> <C-\><C-n>
 "タブを押してコードを補完
-inoremap <silent><expr> <TAB> pumvisible() ? "\<C-n>" : "\<TAB>"
+inoremap <silent><expr> <TAB> pumvisible() ? "\<C-n>":"\<TAB>"
 inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+
+
+" telescope
+nnoremap <C-f> <cmd>Telescope find_files<cr>
+nnoremap <C-p> <cmd>Telescope live_grep<cr>
+nnoremap <leader>fh <cmd>Telescope help_tags<cr>
+
+"24ビットカラー
+set termguicolors
+
+
 
 "ファイルタイプごとにコンパイル/実行コマンドを定義
 function! Setup()
     "フルパスから拡張子を除いたもの
     let l:no_ext_path = printf("%s/%s", expand("%:h"), expand("%:r"))
-    "各言語の実行コマンド
+
     let g:compile_command_dict = {
                 \'c': printf('gcc -std=gnu11 -O2 -lm -o %s.out %s && %s/%s.out', expand("%:r"), expand("%:p"), expand("%:h"), expand("%:r")),
                 \'cpp': printf('g++ -std=gnu++17 -O2 -o %s.out %s && %s/%s.out', expand("%:r"), expand("%:p"), expand("%:h"), expand("%:r")),
@@ -91,6 +83,55 @@ function! Setup()
     endif
 endfunction
 command! Setup call Setup()
+
+function! AddIndentWhenEnter()
+    if getline(".")[col(".")-1] == "}" && getline(".")[col(".")-2] == "{"
+        return "\n\t\n\<UP>\<END>"
+    else
+        return "\n"
+    endif
+endfunction
+inoremap <silent> <expr> <CR> AddIndentWhenEnter()
+
+function! s:clang_format()
+  let now_line = line(".")
+  exec ":%! clang-format"
+  exec ":" . now_line
+endfunction
+
+function! DeleteParenthesesAdjoin()
+    let pos = col(".") - 1  " カーソルの位置．1からカウント
+    let str = getline(".")  " カーソル行の文字列
+    let parentLList = ["(", "[", "{", "\'", "\""]
+    let parentRList = [")", "]", "}", "\'", "\""]
+    let cnt = 0
+
+    let output = ""
+
+    " カーソルが行末の場合
+    if pos == strlen(str)
+        return "\b"
+    endif
+    for c in parentLList
+        " カーソルの左右が同種の括弧
+        if str[pos-1] == c && str[pos] == parentRList[cnt]
+            call cursor(line("."), pos + 2)
+            let output = "\b"
+            break
+        endif
+        let cnt += 1
+    endfor
+    return output."\b"
+endfunction
+" BackSpaceに割り当て
+inoremap <silent> <BS> <C-R>=DeleteParenthesesAdjoin()<CR>
+
+if executable('clang-format')
+  augroup cpp_clang_format
+    autocmd!
+    autocmd BufWrite,FileWritePre,FileAppendPre *.[ch]pp call s:clang_format()
+  augroup END
+endif
 
 "ファイルを開き直したときに実行コマンドを再設定
 autocmd BufNewFile,BufRead * Setup

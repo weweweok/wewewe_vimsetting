@@ -9,22 +9,7 @@ Plug 'prettier/vim-prettier', {
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
 
-" Install your UIs
-Plug 'Shougo/ddc-ui-native'
-
-" Install your sources
-Plug 'Shougo/ddc-source-around'
-
-" Install your filters
-Plug 'Shougo/ddc-matcher_head'
-Plug 'Shougo/ddc-sorter_rank'
-
-Plug 'prabirshrestha/vim-lsp'
-Plug 'mattn/vim-lsp-settings'
-
-Plug 'prabirshrestha/asyncomplete.vim'
-Plug 'prabirshrestha/asyncomplete-lsp.vim'
+Plug 'nvim-lua/plenary.nvim'
+Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.5' }
 
 call plug#end()
-
-

@@ -5,15 +5,58 @@
       "args": ["start"],
       "filetypes": ["sh"],
       "ignoredRootPaths": ["~"]
+    },
+    "clangd": {
+      "command": "/usr/bin/clangd",
+      "rootPatterns": ["compile_flags.txt", "compile_commands.json"],
+      "filetypes": ["c", "cpp", "objc", "objcpp"]
+    },
+    "lua": {
+      "command": "lua-language-server",
+      "filetypes": ["lua"],
+      "settings": {
+        "diagnostics": {
+          "disable": ["undefined-global", "lowercase-global"],
+          "globals": ["vim", "use"]
+        }
+      }
+    },
+    "python": {
+      "command": "@yaegassy/coc-pylsp",
+      "filetypes": ["py"],
+      "settings": {
+        "pyright": {
+          "useLibraryCodeForTypes": true
+        }
+      }
+    },
+    "typescript": {
+      "command": "typescript-language-server",
+      "args": ["--stdio"],
+      "filetypes": [
+        "javascript",
+        "javascriptreact",
+        "javascript.jsx",
+        "typescript",
+        "typescriptreact",
+        "typescript.tsx"
+      ],
+      "settings": {
+        "typescript": {
+          "preferences": {
+            "importModuleSpecifierPreference": "non-relative"
+          }
+        }
+      }
     }
   },
-
-  "clangd.path": "~/.config/coc/extensions/coc-clangd-data/install/16.0.2/clangd_16.0.2/bin/clangd",
+  "solargraph.hover": true,
+  "solargraph.commandPath": "/usr/local/bin/solargraph",
+  "solargraph.shell": "/usr/bin/zsh",
+  "colors.enable": false,
   "suggest.noselect": true,
-  "clangd.fallbackFlags": [
-    "-I/home/usrname/vcpkg/installed/x64-linux/include",
-    "-L/home/usrname/vcpkg/installed/x64-linux/lib"
-  ],
+  "deno.lint": true,
   "coc.preferences.formatOnSave": true,
-  "colors.enable": true
+  "tsserver.enable": true,
+  "prettier.enable": true
 }

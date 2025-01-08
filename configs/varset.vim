@@ -1,4 +1,3 @@
-
 " ターミナルを常に挿入モードで
 autocmd TermOpen * startinsert
 
